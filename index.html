@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convert github assets links to CDN</title>
+  <style>
+    #target {
+      display: block;
+      margin: auto;
+      width: 80%;
+      text-align: center;
+      padding: 0.75rem 1.25rem;
+    }
+
+    #result {
+      display: none;
+      margin: auto;
+      width: 80%;
+      text-align: center;
+      margin-top: 1rem;
+      background: #eee;
+      padding: 0.75rem 1.25rem;
+      color: #4f4f4f;
+    }
+  </style>
+</head>
+
+<body>
+  <p>Examples:</p>
+  <ul>
+    <li>https://raw.githubusercontent.com/nvm-sh/nvm/master/test/common.sh</li>
+    <li>https://github.com/nvm-sh/nvm/blob/master/test/common.sh</li>
+  </ul>
+  <input id="target" type="text">
+  <p id="result"></p>
+  <script>
+    const target = document.getElementById('target')
+    const result = document.getElementById('result')
+    target.addEventListener('input', () => {
+      const reg = /(raw\.githubusercontent\.com|github\.com)\/([^\/]+)\/([^\/]+)(?:\/blob)?\/([^\/]+)\/(.*)/
+      const m = target.value.match(reg)
+      if (!m) {
+        updateResult('Invalid URL!')
+      } else {
+        updateResult(`https://cdn.jsdelivr.net/gh/${m[2]}/${m[3]}@${m[4]}/${m[5]}`)
+      }
+
+    })
+
+    function updateResult(text) {
+      if (!text) {
+        result.style.display = 'none'
+      } else {
+        result.style.display = 'block'
+      }
+      result.innerHTML = text
+    }
+  </script>
+</body>
+
+</html>
