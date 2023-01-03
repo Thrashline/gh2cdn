@@ -2,63 +2,70 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Convert github assets links to CDN</title>
-  <style>
-    #target {
-      display: block;
-      margin: auto;
-      width: 80%;
-      text-align: center;
-      padding: 0.75rem 1.25rem;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github Url To jsDelivr</title>
 
-    #result {
-      display: none;
-      margin: auto;
-      width: 80%;
-      text-align: center;
-      margin-top: 1rem;
-      background: #eee;
-      padding: 0.75rem 1.25rem;
-      color: #4f4f4f;
-    }
-  </style>
 </head>
 
-<body>
-  <p>Examples:</p>
-  <ul>
-    <li>https://raw.githubusercontent.com/nvm-sh/nvm/master/test/common.sh</li>
-    <li>https://github.com/nvm-sh/nvm/blob/master/test/common.sh</li>
-  </ul>
-  <input id="target" type="text">
-  <p id="result"></p>
-  <script>
-    const target = document.getElementById('target')
-    const result = document.getElementById('result')
-    target.addEventListener('input', () => {
-      const reg = /(raw\.githubusercontent\.com|github\.com)\/([^\/]+)\/([^\/]+)(?:\/blob)?\/([^\/]+)\/(.*)/
-      const m = target.value.match(reg)
-      if (!m) {
-        updateResult('Invalid URL!')
-      } else {
-        updateResult(`https://cdn.jsdelivr.net/gh/${m[2]}/${m[3]}@${m[4]}/${m[5]}`)
-      }
-
-    })
-
-    function updateResult(text) {
-      if (!text) {
-        result.style.display = 'none'
-      } else {
-        result.style.display = 'block'
-      }
-      result.innerHTML = text
+<style>
+    input {
+        width: 100%;
+        font-size: 25px;
+        height: 30px;
+        margin: 2rem;
     }
-  </script>
+
+    .container {
+        width: 60%;
+        position: absolute;
+        vertical-align: cen;
+        top: 40%;
+        margin: 0 20%;
+        display: table-row;
+    }
+
+    .center {
+        text-align: center;
+    }
+    a {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="center">Input Github URL</div>
+        <input id="github" type="text">
+        <br>
+        <div class="center">Generate jsDelivr URL</div>
+        <input id="jsdelivr" type="text">
+        <a id="cdn" href="" target="_blank"></a>
+        <a id="purge" href="" target="_blank"></a>
+    </div>
 </body>
+
+<script type="text/javascript">
+    cdn = document.getElementById("cdn");
+    purge = document.getElementById("purge");
+    github_input = document.getElementById("github");
+    jsdelivr_input = document.getElementById("jsdelivr");
+    github_input.addEventListener("keyup", function (event) {
+        url = github_input.value
+        url = url.replace(/.*github.com/gm, "https://cdn.jsdelivr.net/gh")
+        url = url.replace("/blob/", "@")
+        url = url.replace("/tree/", "@")
+
+        jsdelivr_input.value = url
+        cdn.href = url
+        cdn.text = url
+        
+        url = url.replace("cdn.jsdelivr.net","purge.jsdelivr.net")
+        purge.href = url
+        purge.text = url
+
+    });
+</script>
 
 </html>
